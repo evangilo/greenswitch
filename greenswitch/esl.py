@@ -256,7 +256,6 @@ class OutboundSession(ESLProtocol):
         self.connected = True
         self.session_data = None
         self.start_event_handlers()
-        self.connect()
         self.register_handle('*', self.on_event)
         self.register_handle('CHANNEL_HANGUP', self.on_hangup)
         self.expected_events = {}
@@ -463,6 +462,7 @@ class OutboundESLServer(object):
             self.handle_call(session)
 
         logging.info('Closing socket connection...')
+        self.server.shutdown(socket.SHUT_RD)
         self.server.close()
 
         logging.info('Waiting for calls to be ended. Currently, there are %s active calls' % self.connection_count)
